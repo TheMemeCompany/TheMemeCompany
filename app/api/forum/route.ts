@@ -47,28 +47,6 @@ export async function POST(req: NextRequest) {
     suggestions.push(suggestion);
     await writeData("suggestions", suggestions);
 
-    // Post to all active meeting chats + general
-    const meetings = await readData<any[]>("meetings", []);
-    const now = Date.now();
-    const activeMeetingIds = meetings
-      .filter((m: any) => m.endsAt > now)
-      .map((m: any) => m.id);
-    const targets = ["general", ...activeMeetingIds];
-
-    const chatMessages = await readData<any[]>("chat", []);
-    const msgText = `${suggestion.submittedBy} suggested $${suggestion.ticker}${suggestion.reason ? ` — "${suggestion.reason}"` : ""}`;
-    for (const meetingId of targets) {
-      chatMessages.push({
-        id: `${Date.now()}_sug_${meetingId}`,
-        meetingId,
-        handle: "📋 Suggestions",
-        text: msgText,
-        timestamp: Date.now(),
-        isSystem: true,
-      });
-    }
-    await writeData("chat", chatMessages);
-
     return NextResponse.json({ ok: true, suggestion });
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
