@@ -5,6 +5,10 @@ import { Nav } from "@/components/Nav";
 export const metadata: Metadata = {
   title: "The Meme Company",
   description: "Hold $MEME. Every 24 hours, fees buy a new coin and send it to the top 100 holders.",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
