@@ -1,12 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
   const [authError, setAuthError] = useState("");
   const [checking, setChecking] = useState(false);
-  const [tab, setTab] = useState<"meeting" | "distribute" | "clear">("meeting");
+  const [tab, setTab] = useState<"meeting" | "distribute" | "employees" | "clear">("meeting");
 
   async function login() {
     if (!password) return;
@@ -55,15 +55,16 @@ export default function AdminPage() {
         <h1 className="text-4xl font-bold font-serif">Admin</h1>
       </header>
       <div className="flex gap-2 mb-8 border-b border-white/10">
-        {(["meeting", "distribute", "clear"] as const).map((t) => (
+        {(["meeting", "distribute", "employees", "clear"] as const).map((t) => (
           <button key={t} onClick={() => setTab(t)}
             className={`px-4 py-2 text-xs uppercase tracking-widest ${tab === t ? "text-accent border-b-2 border-accent" : "text-muted"}`}>
-            {t === "meeting" ? "Open Meeting" : t === "distribute" ? "Distribute Fees" : "Clear Data"}
+            {t === "meeting" ? "Open Meeting" : t === "distribute" ? "Distribute Fees" : t === "employees" ? "Employees" : "Clear Data"}
           </button>
         ))}
       </div>
       {tab === "meeting" && <CreateMeeting password={password} />}
       {tab === "distribute" && <CreateDistribution password={password} />}
+      {tab === "employees" && <ManageEmployees password={password} />}
       {tab === "clear" && <ClearData password={password} />}
     </div>
   );
@@ -176,6 +177,100 @@ function CreateDistribution({ password }: { password: string }) {
       <button onClick={commitDistribution} className="btn-primary">Publish Distribution Record</button>
       {status && <div className="text-xs text-accent">{status}</div>}
       <style jsx>{`.inp{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(245,241,232,0.15);padding:8px 12px;font-family:ui-monospace,monospace;font-size:13px;color:#f5f1e8;}`}</style>
+    </div>
+  );
+}
+
+function ManageEmployees({ password }: { password: string }) {
+  const [employees, setEmployees] = useState<any[]>([]);
+  const [handle, setHandle] = useState("");
+  const [title, setTitle] = useState("");
+  const [wallet, setWallet] = useState("");
+  const [allocation, setAllocation] = useState("1");
+  const [status, setStatus] = useState("");
+
+  useEffect(() => {
+    fetch("/api/employees").then((r) => r.json()).then((d) => setEmployees(d.employees || []));
+  }, []);
+
+  async function hire() {
+    if (!handle || !wallet) return setStatus("Handle and wallet required");
+    try {
+      const res = await fetch("/api/employees", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          adminPassword: password,
+          employee: { handle, title, wallet, allocation: Number(allocation), status: "active" },
+        }),
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error);
+      setStatus("✓ Employee added");
+      setHandle(""); setTitle(""); setWallet(""); setAllocation("1");
+      fetch("/api/employees").then((r) => r.json()).then((d) => setEmployees(d.employees || []));
+    } catch (e: any) { setStatus(`Error: ${e.message}`); }
+  }
+
+  async function fire(w: string) {
+    if (!confirm("Fire this employee?")) return;
+    try {
+      const res = await fetch("/api/employees", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ adminPassword: password, action: "fire", wallet: w }),
+      });
+      const d = await res.json();
+      if (!res.ok) throw new Error(d.error);
+      fetch("/api/employees").then((r) => r.json()).then((d) => setEmployees(d.employees || []));
+    } catch (e: any) { setStatus(`Error: ${e.message}`); }
+  }
+
+  const active = employees.filter((e) => e.status === "active");
+
+  return (
+    <div className="space-y-6 max-w-2xl">
+      <div className="corp-card p-6 space-y-3">
+        <div className="label mb-2">Hire Employee</div>
+        <div className="flex gap-3">
+          <div className="flex-1">
+            <div className="label text-[10px] mb-1">X Handle</div>
+            <input value={handle} onChange={(e) => setHandle(e.target.value)} placeholder="@handle" className="inp w-full" />
+          </div>
+          <div className="flex-1">
+            <div className="label text-[10px] mb-1">Title</div>
+            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Chief Meme Officer" className="inp w-full" />
+          </div>
+        </div>
+        <div>
+          <div className="label text-[10px] mb-1">Wallet Address</div>
+          <input value={wallet} onChange={(e) => setWallet(e.target.value)} placeholder="Solana wallet" className="inp w-full font-mono text-xs" />
+        </div>
+        <div>
+          <div className="label text-[10px] mb-1">Allocation (%)</div>
+          <input type="number" value={allocation} onChange={(e) => setAllocation(e.target.value)} className="inp w-24" step="0.1" />
+        </div>
+        <button onClick={hire} className="btn-primary">Hire</button>
+        {status && <div className="text-xs text-accent">{status}</div>}
+        <style jsx>{`.inp{background:rgba(255,255,255,0.04);border:1px solid rgba(245,241,232,0.15);padding:8px 12px;font-family:ui-monospace,monospace;font-size:13px;color:#f5f1e8;}`}</style>
+      </div>
+
+      <div className="space-y-2">
+        <div className="label mb-2">Current Employees ({active.length})</div>
+        {active.length === 0 && <div className="text-muted text-sm">No employees yet.</div>}
+        {active.map((e) => (
+          <div key={e.wallet} className="corp-card p-4 flex items-center justify-between">
+            <div>
+              <div className="font-bold">{e.handle} <span className="text-accent text-xs ml-2">{e.allocation}%</span></div>
+              <div className="text-xs text-muted">{e.title} · {e.wallet.slice(0, 8)}…{e.wallet.slice(-6)}</div>
+            </div>
+            <button onClick={() => fire(e.wallet)}
+              className="btn text-xs border-red-500/50 text-red-400 hover:bg-red-500 hover:text-white shrink-0 ml-4">
+              Fire
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
