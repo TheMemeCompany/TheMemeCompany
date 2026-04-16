@@ -48,7 +48,6 @@ export async function POST(req: NextRequest) {
     await writeData("suggestions", suggestions);
 
     // Post to all active meeting chats + general
-    const { Meeting } = await import("@/lib/store");
     const meetings = await readData<any[]>("meetings", []);
     const now = Date.now();
     const activeMeetingIds = meetings
