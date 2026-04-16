@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #f5f1e8;
+}
+
+html, body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.corp-border {
+  border: 1px solid rgba(245, 241, 232, 0.15);
+}
+
+.corp-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(245, 241, 232, 0.12);
+}
+
+.btn {
+  @apply px-4 py-2 corp-border hover:bg-accent hover:text-ink transition-colors uppercase tracking-widest text-xs;
+}
+
+.btn-primary {
+  @apply px-4 py-2 bg-accent text-ink hover:opacity-90 transition-opacity uppercase tracking-widest text-xs font-bold;
+}
+
+.label {
+  @apply text-xs uppercase tracking-widest text-muted;
+}
+
+.stamp {
+  border: 2px solid #ff5c1f;
+  color: #ff5c1f;
+  padding: 4px 12px;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+  display: inline-block;
+  transform: rotate(-2deg);
+  text-transform: uppercase;
+}
+
+/* wallet adapter overrides */
+.wallet-adapter-button {
+  background: #ff5c1f !important;
+  color: #0a0a0a !important;
+  border-radius: 0 !important;
+  font-family: ui-monospace, monospace !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  font-size: 12px !important;
+  height: 36px !important;
+}
