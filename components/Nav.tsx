@@ -25,7 +25,7 @@ export function Nav() {
           {link("/", "HQ")}
           {link("/employees", "Employees")}
           {link("/meetings", "Shareholder Meetings")}
-          {link("/forum", "Suggestions")}
+          {link("/forum", "Leaderboard")}
           {link("/claim", "Distributions")}
           <Link href="/admin" className="text-muted hover:text-accent transition-colors">Admin</Link>
         </div>
