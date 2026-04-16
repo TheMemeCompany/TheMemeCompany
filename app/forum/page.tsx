@@ -76,36 +76,6 @@ export default function ForumPage() {
         </p>
       </header>
 
-      {/* Submit form */}
-      <div className="corp-card p-6 max-w-2xl space-y-3">
-        <div className="label mb-2">Submit a coin</div>
-        <div className="flex gap-3">
-          <div className="flex-1">
-            <div className="label text-[10px] mb-1">Ticker</div>
-            <input value={ticker} onChange={(e) => setTicker(e.target.value)} placeholder="$BONK"
-              className="inp w-full" />
-          </div>
-          <div className="flex-1">
-            <div className="label text-[10px] mb-1">Your name (optional)</div>
-            <input value={handle} onChange={(e) => setHandle(e.target.value)} placeholder="@handle"
-              className="inp w-full" />
-          </div>
-        </div>
-        <div>
-          <div className="label text-[10px] mb-1">Contract address (optional)</div>
-          <input value={ca} onChange={(e) => setCa(e.target.value)} placeholder="Mint address"
-            className="inp w-full font-mono text-xs" />
-        </div>
-        <div>
-          <div className="label text-[10px] mb-1">Why this coin? (optional)</div>
-          <textarea value={reason} onChange={(e) => setReason(e.target.value)} rows={2}
-            placeholder="Tell us why the company should buy this" className="inp w-full" maxLength={280} />
-        </div>
-        <button onClick={submit} className="btn-primary">Submit</button>
-        {status && <div className="text-xs text-accent">{status}</div>}
-        <style jsx>{`.inp{background:rgba(255,255,255,0.04);border:1px solid rgba(245,241,232,0.15);padding:8px 12px;font-family:ui-monospace,monospace;font-size:13px;color:#f5f1e8;}`}</style>
-      </div>
-
       {/* Leaderboard */}
       <section>
         <div className="label mb-4">// Leaderboard — sorted by votes</div>
@@ -148,6 +118,36 @@ export default function ForumPage() {
           ))}
         </div>
       </section>
+
+      {/* Submit form */}
+      <div className="corp-card p-6 max-w-2xl space-y-3">
+        <div className="label mb-2">Submit a coin</div>
+        <div className="flex gap-3">
+          <div className="flex-1">
+            <div className="label text-[10px] mb-1">Ticker</div>
+            <input value={ticker} onChange={(e) => setTicker(e.target.value)} placeholder="$BONK"
+              className="inp w-full" />
+          </div>
+          <div className="flex-1">
+            <div className="label text-[10px] mb-1">Your name (optional)</div>
+            <input value={handle} onChange={(e) => setHandle(e.target.value)} placeholder="@handle"
+              className="inp w-full" />
+          </div>
+        </div>
+        <div>
+          <div className="label text-[10px] mb-1">Contract address (optional)</div>
+          <input value={ca} onChange={(e) => setCa(e.target.value)} placeholder="Mint address"
+            className="inp w-full font-mono text-xs" />
+        </div>
+        <div>
+          <div className="label text-[10px] mb-1">Why this coin? (optional)</div>
+          <textarea value={reason} onChange={(e) => setReason(e.target.value)} rows={2}
+            placeholder="Tell us why the company should buy this" className="inp w-full" maxLength={280} />
+        </div>
+        <button onClick={submit} className="btn-primary">Submit</button>
+        {status && <div className="text-xs text-accent">{status}</div>}
+        <style jsx>{`.inp{background:rgba(255,255,255,0.04);border:1px solid rgba(245,241,232,0.15);padding:8px 12px;font-family:ui-monospace,monospace;font-size:13px;color:#f5f1e8;}`}</style>
+      </div>
     </div>
   );
 }
