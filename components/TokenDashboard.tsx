@@ -43,8 +43,8 @@ export function TokenDashboard() {
   if (!mint) {
     return (
       <div className="corp-card p-6">
-        <div className="label mb-2">// TOKEN STATUS</div>
-        <div className="text-accent">Awaiting launch. Set NEXT_PUBLIC_TOKEN_MINT after deploy.</div>
+        <div className="label mb-2">// CA</div>
+        <div className="text-accent">Awaiting launch.</div>
       </div>
     );
   }
