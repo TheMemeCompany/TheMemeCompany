@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Countdown } from "@/components/Countdown";
 
 type DistSummary = {
   id: string;
@@ -33,11 +34,29 @@ export default function DistributionsPage() {
         <InfoCard step="03" title="Receive automatically" body="Tokens land directly in your wallet. No action needed." />
       </div>
 
+      {/* Treasury wallet */}
+      {process.env.NEXT_PUBLIC_TREASURY_WALLET && (
+        <div className="corp-card p-4 flex items-center justify-between">
+          <div className="label">// Treasury Wallet</div>
+          <a
+            href={`https://solscan.io/account/${process.env.NEXT_PUBLIC_TREASURY_WALLET}`}
+            target="_blank"
+            className="font-mono text-xs text-muted hover:text-accent"
+          >
+            {process.env.NEXT_PUBLIC_TREASURY_WALLET}
+          </a>
+        </div>
+      )}
+
+      {/* Meeting countdown */}
+      <Countdown />
+      <div className="text-center text-sm text-muted -mt-6">Distribution begins at the end of the shareholder meeting</div>
+
       {/* Latest winner — hero section */}
       <section>
         <div className="label mb-4">// Latest Distribution</div>
         {!latest ? (
-          <div className="corp-card p-8 text-muted">First distribution fires 30 minutes after launch.</div>
+          <div className="corp-card p-8 text-muted">No distributions yet — first one fires after the current meeting ends.</div>
         ) : (
           <div className="corp-border p-8 flex items-center justify-between gap-8">
             <div>
