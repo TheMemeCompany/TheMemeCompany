@@ -13,9 +13,26 @@ type DistSummary = {
 
 export default function DistributionsPage() {
   const [distributions, setDistributions] = useState<DistSummary[]>([]);
+  const [winner, setWinner] = useState<{ ticker: string; ca: string } | null>(null);
 
   useEffect(() => {
     fetch("/api/distributions/list").then((r) => r.json()).then((d) => setDistributions(d.distributions || []));
+
+    // Find the most recently ended meeting and its winner
+    fetch("/api/votes/meetings").then((r) => r.json()).then(async (d) => {
+      const now = Date.now();
+      const ended = (d.meetings || []).filter((m: any) => m.endsAt <= now);
+      if (ended.length === 0) return;
+      const latest = ended.sort((a: any, b: any) => b.endsAt - a.endsAt)[0];
+      const tally = await fetch(`/api/votes/tally?meetingId=${latest.id}`).then((r) => r.json());
+      const entries = Object.entries(tally.tally || {}) as [string, { weight: number }][];
+      if (entries.length === 0) return;
+      const winnerIndex = Number(entries.sort((a, b) => b[1].weight - a[1].weight)[0][0]);
+      const option = latest.options?.[winnerIndex];
+      if (!option) return;
+      const [ticker, ca] = option.includes("|") ? option.split("|") : [option, ""];
+      setWinner({ ticker, ca });
+    });
   }, []);
 
   const latest = distributions[0] || null;
@@ -55,18 +72,31 @@ export default function DistributionsPage() {
       {/* Latest winner — hero section */}
       <section>
         <div className="label mb-4">// Latest Distribution</div>
-        {!latest ? (
-          <div className="corp-card p-8 text-muted">No distributions yet — first one fires after the current meeting ends.</div>
-        ) : (
-          <div className="corp-border p-8 flex items-center justify-between gap-8">
+        {winner && (
+          <div className="corp-border p-8 flex items-center justify-between gap-8 mb-4">
             <div>
               <div className="label mb-2">This round's winner</div>
+              <div className="text-7xl font-bold font-serif text-accent mb-3">${winner.ticker}</div>
+              {winner.ca && (
+                <a href={`https://dexscreener.com/solana/${winner.ca}`} target="_blank"
+                  className="font-mono text-sm text-muted hover:text-accent">
+                  {winner.ca}
+                </a>
+              )}
+            </div>
+            <div className="stamp text-lg">Winner</div>
+          </div>
+        )}
+        {!winner && !latest && (
+          <div className="corp-card p-8 text-muted">No distributions yet — first one fires after the current meeting ends.</div>
+        )}
+        {latest && (
+          <div className="corp-border p-8 flex items-center justify-between gap-8">
+            <div>
+              <div className="label mb-2">Last sent</div>
               <div className="text-7xl font-bold font-serif text-accent mb-3">${latest.tokenSymbol}</div>
-              <a
-                href={`https://dexscreener.com/solana/${latest.tokenMint}`}
-                target="_blank"
-                className="font-mono text-sm text-muted hover:text-accent"
-              >
+              <a href={`https://dexscreener.com/solana/${latest.tokenMint}`} target="_blank"
+                className="font-mono text-sm text-muted hover:text-accent">
                 {latest.tokenMint}
               </a>
             </div>
