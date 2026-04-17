@@ -34,13 +34,13 @@ export async function POST(req: NextRequest) {
     const filtered = votes.filter((v) => !(v.meetingId === meetingId && v.wallet === wallet));
     filtered.push({
       meetingId, wallet, choice,
-      weight: balance,
+      weight: 1,
       signature: "",
       signedMessage: "",
       timestamp: Date.now(),
     });
     await writeData("votes", filtered);
-    return NextResponse.json({ ok: true, weight: balance });
+    return NextResponse.json({ ok: true, weight: 1 });
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }
