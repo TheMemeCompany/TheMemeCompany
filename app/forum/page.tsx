@@ -72,7 +72,7 @@ export default function ForumPage() {
         <div className="label mb-2">// LEADERBOARD</div>
         <h1 className="text-4xl font-bold font-serif">Leaderboard</h1>
         <p className="text-muted mt-2 max-w-2xl">
-          Submit a coin for the next shareholder meeting. The most voted suggestions get added to the vote by the board.
+          Submit a coin for the next community vote. The most upvoted coins get added to the ballot.
         </p>
       </header>
 
@@ -95,7 +95,7 @@ export default function ForumPage() {
           <div>
             <div className="label text-[10px] mb-1">Why this coin? (optional)</div>
             <textarea value={reason} onChange={(e) => setReason(e.target.value)} rows={3}
-              placeholder="Tell us why the company should buy this" className="inp w-full" maxLength={280} />
+              placeholder="Tell us why this coin should win" className="inp w-full" maxLength={280} />
           </div>
           <button onClick={submit} className="btn-primary w-full">Submit</button>
           {status && <div className="text-xs text-accent">{status}</div>}

@@ -79,7 +79,7 @@ export function Countdown() {
         <div className="text-right space-y-2">
           <div className="flex items-center justify-end gap-2">
             <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-            <span className="text-xs uppercase tracking-widest text-accent font-bold">Shareholder meeting in session</span>
+            <span className="text-xs uppercase tracking-widest text-accent font-bold">Community vote in session</span>
           </div>
           <div>
             <Link href="/meetings" className="btn-primary text-xs">Vote now →</Link>

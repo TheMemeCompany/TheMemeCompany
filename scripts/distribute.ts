@@ -98,6 +98,13 @@ async function main() {
   let success = 0;
   let failed = 0;
 
+  // Get treasury ATA once upfront
+  const treasuryAta = await getOrCreateAssociatedTokenAccount(
+    conn, treasury, new PublicKey(TOKEN_MINT), treasury.publicKey
+  );
+
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
   for (let i = 0; i < allocations.length; i += BATCH_SIZE) {
     const batch = allocations.slice(i, i + BATCH_SIZE);
     const tx = new Transaction();
@@ -107,19 +114,11 @@ async function main() {
     for (const alloc of batch) {
       try {
         const recipientPk = new PublicKey(alloc.wallet);
-        // Create recipient ATA if it doesn't exist
         const recipientAta = await getOrCreateAssociatedTokenAccount(
           conn,
           treasury,
           new PublicKey(TOKEN_MINT),
           recipientPk
-        );
-        // Create ATA for treasury if needed
-        const treasuryAta = await getOrCreateAssociatedTokenAccount(
-          conn,
-          treasury,
-          new PublicKey(TOKEN_MINT),
-          treasury.publicKey
         );
         tx.add(
           createTransferInstruction(
@@ -130,6 +129,7 @@ async function main() {
           )
         );
         ataInstructions.push({ wallet: alloc.wallet, amount: alloc.share.toString() });
+        await sleep(300); // avoid rate limiting
       } catch (e: any) {
         console.error(`  ✗ Failed to prepare ${alloc.wallet.slice(0, 8)}…: ${e.message}`);
         results.push({ wallet: alloc.wallet, amount: alloc.share.toString(), error: e.message });

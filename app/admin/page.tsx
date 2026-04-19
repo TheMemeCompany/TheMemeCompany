@@ -58,7 +58,7 @@ export default function AdminPage() {
         {(["meeting", "distribute", "employees", "clear"] as const).map((t) => (
           <button key={t} onClick={() => setTab(t)}
             className={`px-4 py-2 text-xs uppercase tracking-widest ${tab === t ? "text-accent border-b-2 border-accent" : "text-muted"}`}>
-            {t === "meeting" ? "Open Meeting" : t === "distribute" ? "Distribute Fees" : t === "employees" ? "Employees" : "Clear Data"}
+            {t === "meeting" ? "Open Vote" : t === "distribute" ? "Distribute Fees" : t === "employees" ? "KOLs" : "Clear Data"}
           </button>
         ))}
       </div>
@@ -94,7 +94,7 @@ function CreateMeeting({ password }: { password: string }) {
       });
       const d = await res.json();
       if (!res.ok) throw new Error(d.error);
-      setStatus(`✓ Meeting opened. Closes in ${hours}h.`);
+      setStatus(`✓ Vote opened. Closes in ${hours}h.`);
       setTitle(""); setDescription(""); setOptions([{ ticker: "", ca: "" }, { ticker: "", ca: "" }]);
     } catch (e: any) { setStatus(`Error: ${e.message}`); }
   }
@@ -166,7 +166,7 @@ function CreateDistribution({ password }: { password: string }) {
 
   return (
     <div className="corp-card p-6 space-y-4 max-w-2xl">
-      <button onClick={runPreview} className="btn">Snapshot top 100 $MEME holders</button>
+      <button onClick={runPreview} className="btn">Snapshot top 100 $COIN holders</button>
       {preview && <div className="text-xs text-muted">✓ {preview.length} holders</div>}
       <input className="inp" placeholder="Token mint address" value={distMint} onChange={(e) => setDistMint(e.target.value)} />
       <div className="flex gap-3">
@@ -206,14 +206,14 @@ function ManageEmployees({ password }: { password: string }) {
       });
       const d = await res.json();
       if (!res.ok) throw new Error(d.error);
-      setStatus("✓ Employee added");
+      setStatus("✓ KOL added");
       setHandle(""); setTitle(""); setWallet(""); setAllocation("1");
       fetch("/api/employees").then((r) => r.json()).then((d) => setEmployees(d.employees || []));
     } catch (e: any) { setStatus(`Error: ${e.message}`); }
   }
 
   async function fire(w: string) {
-    if (!confirm("Fire this employee?")) return;
+    if (!confirm("Remove this KOL?")) return;
     try {
       const res = await fetch("/api/employees", {
         method: "POST",
@@ -231,7 +231,7 @@ function ManageEmployees({ password }: { password: string }) {
   return (
     <div className="space-y-6 max-w-2xl">
       <div className="corp-card p-6 space-y-3">
-        <div className="label mb-2">Hire Employee</div>
+        <div className="label mb-2">Add KOL</div>
         <div className="flex gap-3">
           <div className="flex-1">
             <div className="label text-[10px] mb-1">X Handle</div>
@@ -239,7 +239,7 @@ function ManageEmployees({ password }: { password: string }) {
           </div>
           <div className="flex-1">
             <div className="label text-[10px] mb-1">Title</div>
-            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Chief Meme Officer" className="inp w-full" />
+            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Crypto KOL" className="inp w-full" />
           </div>
         </div>
         <div>
@@ -250,14 +250,14 @@ function ManageEmployees({ password }: { password: string }) {
           <div className="label text-[10px] mb-1">Allocation (%)</div>
           <input type="number" value={allocation} onChange={(e) => setAllocation(e.target.value)} className="inp w-24" step="0.1" />
         </div>
-        <button onClick={hire} className="btn-primary">Hire</button>
+        <button onClick={hire} className="btn-primary">Add KOL</button>
         {status && <div className="text-xs text-accent">{status}</div>}
         <style jsx>{`.inp{background:rgba(255,255,255,0.04);border:1px solid rgba(245,241,232,0.15);padding:8px 12px;font-family:ui-monospace,monospace;font-size:13px;color:#f5f1e8;}`}</style>
       </div>
 
       <div className="space-y-2">
-        <div className="label mb-2">Current Employees ({active.length})</div>
-        {active.length === 0 && <div className="text-muted text-sm">No employees yet.</div>}
+        <div className="label mb-2">Current KOLs ({active.length})</div>
+        {active.length === 0 && <div className="text-muted text-sm">No KOLs yet.</div>}
         {active.map((e) => (
           <div key={e.wallet} className="corp-card p-4 flex items-center justify-between">
             <div>
@@ -266,7 +266,7 @@ function ManageEmployees({ password }: { password: string }) {
             </div>
             <button onClick={() => fire(e.wallet)}
               className="btn text-xs border-red-500/50 text-red-400 hover:bg-red-500 hover:text-white shrink-0 ml-4">
-              Fire
+              Remove
             </button>
           </div>
         ))}
