@@ -26,8 +26,7 @@ export default function KOLsPage() {
         <div className="label mb-2">// THE CHOSEN ONES</div>
         <h1 className="text-4xl font-bold font-serif">KOLs</h1>
         <p className="text-muted mt-2 max-w-2xl">
-          The most trusted voices in Solana crypto. Ten KOLs each hold 1% of supply. Another 10%
-          is reserved for new KOLs — we're always looking for the right people.
+          Ten KOLs each hold 1% of supply. Another 10% is reserved for new KOLs.
         </p>
       </header>
 

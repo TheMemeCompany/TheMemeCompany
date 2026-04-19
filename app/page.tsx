@@ -20,7 +20,7 @@ export default function Home() {
           </h1>
           <div className="space-y-4 leading-relaxed text-sm mb-8">
             <p>
-              Hold <strong>$COIN</strong> and join the movement. Every 24 hours, 100% of the pump.fun trading fees will be used to purchase another coin, decided by the community.
+              Hold <strong>$COIN</strong> and every 24 hours, 100% of the pump.fun trading fees will be used to purchase another coin, decided by the community.
             </p>
             <p>
               The purchased token supply is distributed across the top 100 holders of $COIN, proportional to their holdings.
@@ -46,7 +46,7 @@ export default function Home() {
             <div className="space-y-5 text-sm leading-relaxed">
               <div className="corp-card p-4">
                 <div className="text-accent font-bold mb-1">A coin you love is dying?</div>
-                <p className="text-muted">One Coin steps in, buys supply, and distributes it across the biggest KOLs and bag holders in existence.</p>
+                <p className="text-muted">$ONE steps in.</p>
               </div>
               <div className="corp-card p-4">
                 <div className="text-accent font-bold mb-1">Your coin isn't getting enough attention?</div>
