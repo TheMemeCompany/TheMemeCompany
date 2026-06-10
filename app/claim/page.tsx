@@ -46,7 +46,7 @@ export default function DistributionsPage() {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <InfoCard step="01" title="Hold $COIN" body="The more you hold, the higher your rank. Top 100 at snapshot time receive the distribution." />
+        <InfoCard step="01" title="Hold $MEME" body="The more you hold, the higher your rank. Top 100 at snapshot time receive the distribution." />
         <InfoCard step="02" title="Vote on coins" body="Holders with 0.05%+ supply vote on which coin gets bought. The winning coin is what gets distributed." />
         <InfoCard step="03" title="Receive automatically" body="Tokens land directly in your wallet. No action needed." />
       </div>

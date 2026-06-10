@@ -166,7 +166,7 @@ function CreateDistribution({ password }: { password: string }) {
 
   return (
     <div className="corp-card p-6 space-y-4 max-w-2xl">
-      <button onClick={runPreview} className="btn">Snapshot top 100 $COIN holders</button>
+      <button onClick={runPreview} className="btn">Snapshot top 100 $MEME holders</button>
       {preview && <div className="text-xs text-muted">✓ {preview.length} holders</div>}
       <input className="inp" placeholder="Token mint address" value={distMint} onChange={(e) => setDistMint(e.target.value)} />
       <div className="flex gap-3">

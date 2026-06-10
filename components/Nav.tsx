@@ -15,9 +15,9 @@ export function Nav() {
     <nav className="border-b border-white/10">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
-          <Image src="/logo.png" alt="One Coin to Save Them All" width={40} height={40} className="rounded-full" />
+          <Image src="/logo.png" alt="The Meme Company" width={40} height={40} className="rounded-full" />
           <div className="leading-tight">
-            <div className="text-sm font-bold tracking-widest">ONE COIN TO SAVE THEM ALL</div>
+            <div className="text-sm font-bold tracking-widest">THE MEME COMPANY</div>
             <div className="text-[10px] text-muted uppercase tracking-widest">Built on Solana</div>
           </div>
         </Link>

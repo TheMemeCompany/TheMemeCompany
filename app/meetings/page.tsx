@@ -92,7 +92,7 @@ function ActiveMeeting({ meeting }: { meeting: Meeting }) {
   const secs = Math.max(0, Math.floor((timeLeft % 60000) / 1000));
 
   async function vote(idx: number) {
-    if (!walletInput.trim()) return setStatus("Paste your $COIN wallet address first");
+    if (!walletInput.trim()) return setStatus("Paste your $MEME wallet address first");
     setSubmitting(true);
     setStatus("");
     try {
@@ -103,7 +103,7 @@ function ActiveMeeting({ meeting }: { meeting: Meeting }) {
       });
       const d = await res.json();
       if (!res.ok) throw new Error(d.error || "Vote failed");
-      setStatus(`✓ Vote cast — weight: ${Number(d.weight).toLocaleString()} $COIN`);
+      setStatus(`✓ Vote cast — weight: ${Number(d.weight).toLocaleString()} $MEME`);
       setVoted(true);
       const t = await fetch(`/api/votes/tally?meetingId=${meeting.id}`).then((r) => r.json());
       setTally(t.tally || {});
@@ -192,7 +192,7 @@ function ActiveMeeting({ meeting }: { meeting: Meeting }) {
           {/* Wallet input */}
           {!voted && (
             <div>
-              <div className="label mb-2">Your $COIN wallet address</div>
+              <div className="label mb-2">Your $MEME wallet address</div>
               <input
                 value={walletInput}
                 onChange={(e) => setWalletInput(e.target.value)}
@@ -208,7 +208,7 @@ function ActiveMeeting({ meeting }: { meeting: Meeting }) {
           {/* Vote totals */}
           {totalWeight > 0 && (
             <div className="corp-card p-3 text-xs text-muted">
-              Total voting weight: {totalWeight.toLocaleString()} $COIN
+              Total voting weight: {totalWeight.toLocaleString()} $MEME
               &nbsp;·&nbsp;
               {Object.values(tally).reduce((s, v) => s + v.voters, 0)} voters
             </div>

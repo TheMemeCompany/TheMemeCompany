@@ -15,15 +15,15 @@ export default function Home() {
           <div className="absolute top-4 right-4 stamp">Est. 2026</div>
           <div className="label mb-4">// PROSPECTUS</div>
           <h1 className="text-5xl font-bold font-serif leading-tight mb-6">
-            One Coin to<br />
-            <span className="text-accent">Save Them All.</span>
+            The Meme<br />
+            <span className="text-accent">Company.</span>
           </h1>
           <div className="space-y-4 leading-relaxed text-sm mb-8">
             <p>
-              Hold <strong>$COIN</strong> and every 24 hours, 100% of the pump.fun trading fees will be used to purchase another coin, decided by the community.
+              Hold <strong>$MEME</strong> and every 24 hours, 100% of the pump.fun trading fees will be used to purchase another coin, decided by the community.
             </p>
             <p>
-              The purchased token supply is distributed across the top 100 holders of $COIN, proportional to their holdings.
+              The purchased token supply is distributed across the top 100 holders of $MEME, proportional to their holdings.
             </p>
             <p>
               10% of the supply has been allocated to 10 of the most influential Solana KOLs, 1% each. Another 10% is reserved for new KOLs who want in.
@@ -46,15 +46,15 @@ export default function Home() {
             <div className="space-y-5 text-sm leading-relaxed">
               <div className="corp-card p-4">
                 <div className="text-accent font-bold mb-1">A coin you love is dying?</div>
-                <p className="text-muted">$ONE steps in.</p>
+                <p className="text-muted">$MEME steps in.</p>
               </div>
               <div className="corp-card p-4">
                 <div className="text-accent font-bold mb-1">Your coin isn't getting enough attention?</div>
-                <p className="text-muted">One Coin to Save Them All.</p>
+                <p className="text-muted">The Meme Company.</p>
               </div>
               <div className="corp-card p-4">
                 <div className="text-accent font-bold mb-1">Your coin is sending and you want it to send harder?</div>
-                <p className="text-muted">One Coin to Save Them All.</p>
+                <p className="text-muted">The Meme Company.</p>
               </div>
             </div>
           </div>
@@ -70,7 +70,7 @@ export default function Home() {
       <TokenDashboard />
 
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <HowItWorksCard step="01" title="Hold $COIN" body="Trading fees from every buy and sell accumulate in the treasury." />
+        <HowItWorksCard step="01" title="Hold $MEME" body="Trading fees from every buy and sell accumulate in the treasury." />
         <HowItWorksCard step="02" title="Vote every 24 hours" body="Holders vote on which coin the community buys next. Minimum 0.05% supply to vote." />
         <HowItWorksCard step="03" title="Receive automatically" body="The winning coin is purchased and sent directly to the top 100 holders. Nothing to do." />
       </section>
