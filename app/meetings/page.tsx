@@ -62,10 +62,18 @@ export default function MeetingsPage() {
 
 function ActiveMeeting({ meeting }: { meeting: Meeting }) {
   const [tally, setTally] = useState<Tally>({});
-  const [walletInput, setWalletInput] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState("");
   const [voted, setVoted] = useState(false);
+  const [voterId] = useState(() => {
+    if (typeof window === "undefined") return crypto.randomUUID();
+    const key = "meme_voter_id";
+    const existing = localStorage.getItem(key);
+    if (existing) return existing;
+    const id = crypto.randomUUID();
+    localStorage.setItem(key, id);
+    return id;
+  });
   const [timeLeft, setTimeLeft] = useState(meeting.endsAt - Date.now());
 
   // Countdown
@@ -92,18 +100,17 @@ function ActiveMeeting({ meeting }: { meeting: Meeting }) {
   const secs = Math.max(0, Math.floor((timeLeft % 60000) / 1000));
 
   async function vote(idx: number) {
-    if (!walletInput.trim()) return setStatus("Paste your $MEME wallet address first");
     setSubmitting(true);
     setStatus("");
     try {
       const res = await fetch("/api/votes/cast", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ meetingId: meeting.id, wallet: walletInput.trim(), choice: idx }),
+        body: JSON.stringify({ meetingId: meeting.id, voterId, choice: idx }),
       });
       const d = await res.json();
       if (!res.ok) throw new Error(d.error || "Vote failed");
-      setStatus(`✓ Vote cast — weight: ${Number(d.weight).toLocaleString()} $MEME`);
+      setStatus("✓ Vote cast!");
       setVoted(true);
       const t = await fetch(`/api/votes/tally?meetingId=${meeting.id}`).then((r) => r.json());
       setTally(t.tally || {});
@@ -189,28 +196,12 @@ function ActiveMeeting({ meeting }: { meeting: Meeting }) {
             </div>
           </div>
 
-          {/* Wallet input */}
-          {!voted && (
-            <div>
-              <div className="label mb-2">Your $MEME wallet address</div>
-              <input
-                value={walletInput}
-                onChange={(e) => setWalletInput(e.target.value)}
-                placeholder="Paste your Solana wallet address to vote"
-                className="w-full bg-white/5 border border-white/15 px-3 py-2 text-sm font-mono focus:outline-none focus:border-accent"
-              />
-              <div className="text-xs text-muted mt-1">Balance checked on-chain to weight your vote. Nothing is signed or connected.</div>
-            </div>
-          )}
-
           {status && <div className="text-xs text-accent">{status}</div>}
 
           {/* Vote totals */}
           {totalWeight > 0 && (
             <div className="corp-card p-3 text-xs text-muted">
-              Total voting weight: {totalWeight.toLocaleString()} $MEME
-              &nbsp;·&nbsp;
-              {Object.values(tally).reduce((s, v) => s + v.voters, 0)} voters
+              {Object.values(tally).reduce((s, v) => s + v.voters, 0)} votes cast
             </div>
           )}
         </div>

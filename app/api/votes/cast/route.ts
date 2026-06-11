@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readData, writeData, Vote, Meeting } from "@/lib/store";
-import { getTokenBalance, getTotalSupply } from "@/lib/solana";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
-    const { meetingId, wallet, choice } = await req.json();
-    if (!meetingId || !wallet) return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+    const { meetingId, choice, voterId } = await req.json();
+    if (!meetingId || choice === undefined) return NextResponse.json({ error: "Missing fields" }, { status: 400 });
 
     const meetings = await readData<Meeting[]>("meetings", []);
     const meeting = meetings.find((m) => m.id === meetingId);
@@ -16,24 +15,14 @@ export async function POST(req: NextRequest) {
     if (Date.now() > meeting.endsAt) return NextResponse.json({ error: "Meeting closed" }, { status: 400 });
     if (choice < 0 || choice >= meeting.options.length) return NextResponse.json({ error: "Invalid choice" }, { status: 400 });
 
-    const mint = process.env.NEXT_PUBLIC_TOKEN_MINT;
-    if (!mint) return NextResponse.json({ error: "Token mint not configured" }, { status: 500 });
-
-    const balance = await getTokenBalance(wallet, mint);
-    const supply = await getTotalSupply(mint);
-    const threshold = Number(process.env.NEXT_PUBLIC_VOTING_THRESHOLD || "0.0005");
-    const minBalance = supply * threshold;
-
-    if (balance < minBalance) {
-      return NextResponse.json({
-        error: `Below voting threshold. You hold ${((balance / supply) * 100).toFixed(4)}%, need ${(threshold * 100).toFixed(2)}%.`,
-      }, { status: 403 });
-    }
+    const id = voterId || crypto.randomUUID();
 
     const votes = await readData<Vote[]>("votes", []);
-    const filtered = votes.filter((v) => !(v.meetingId === meetingId && v.wallet === wallet));
+    const filtered = votes.filter((v) => !(v.meetingId === meetingId && v.wallet === id));
     filtered.push({
-      meetingId, wallet, choice,
+      meetingId,
+      wallet: id,
+      choice,
       weight: 1,
       signature: "",
       signedMessage: "",
